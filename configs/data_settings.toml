@@ -1,0 +1,11 @@
+[DATA_FOLDERS]
+INITIAL_DATA_FOLDER = "/data/initial_data/"
+PREPROCESSED_DATA_FOLDER = "/data/preprocessed_data/"
+ARTEFACTS_DATA_FOLDER = "/artefacts/data/"
+
+[DATA_FILES_P]
+INTERACTIONS_FILE = "interactions.parquet"
+MOVIES_METADATA_FILE = "movies_metadata.parquet"
+
+[DATA_FILES_G]
+USERS_METADATA_FILE = "users_metadata.parquet"

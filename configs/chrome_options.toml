@@ -1,0 +1,26 @@
+[DRIVER]
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+CHROME_OPTIONS = ["--incognito", 
+                  "--headless", 
+                  "--window-size=1920,1080", 
+                  "--disable-extensions", 
+                  "--proxy-server='direct://'", 
+                  "--proxy-bypass-list=*", 
+                  "--start-maximized", 
+                  "--disable-gpu", 
+                  "--disable-dev-shm-usage", 
+                  "--no-sandbox", 
+                  "--ignore-certificate-errors", 
+                  "--allow-running-insecure-content"
+                  ]
+DRIVER_PATH = "./chrome_driver/chromedriver.exe"
+
+[WEBSITE]
+URL_PATTERN = "https://okko.tv/movie/"
+CLASS_TEXT = "__6mkZ0sr_"
+CLASS_IMG = "FVACLF8r"
+
+[NAN_MAPPING_PATH]
+FOLDER = "/artefacts/nans_mapping/"
+FILE_NAME = "missing_ids_names_mapping.pkl"
+ERRORS_FILE_NAME = "error_movies.pkl"
