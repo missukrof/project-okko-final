@@ -23,7 +23,7 @@ Here we have the full pipeline to train and make inference using two-level model
 - <a href="https://github.com/missukrof/project-okko-final/tree/main/data_prep" target="_blank">data_prep</a> - data preparation modules to be used during training_pipeline;
 - <a href="https://github.com/missukrof/project-okko-final/tree/main/draft_notebooks" target="_blank">draft_notebooks</a> - pipeline drafts in jupyter notebook format;
 - <a href="https://github.com/missukrof/project-okko-final/tree/main/models" target="_blank">models</a> - model fit and inference pipeline;
-- <a href="https://github.com/missukrof/project-okko-final/tree/main/utils" target="_blank">utils</a> - some common functions thatn can be used everywhere.
+- <a href="https://github.com/missukrof/project-okko-final/tree/main/utils" target="_blank">utils</a> - some common functions that can be used everywhere.
 ## ‍💻 Basic files
 - <a href="https://github.com/missukrof/project-okko-final/blob/main/preprocessing.py" target="_blank">preprocessing.py</a> - data preprocessing & feature engineering in one file;
 - <a href="https://github.com/missukrof/project-okko-final/blob/main/train.py" target="_blank">train.py</a> - two-stage model training (the first level - LightFM, the second - CatBoost classifier);
