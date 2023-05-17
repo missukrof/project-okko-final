@@ -3,9 +3,6 @@ import ast
 import pandas as pd
 from typing import Dict, List
 
-import sys
-sys.path.append('C:/Users/a.kuznetsova/Documents/Python Scripts/okko/project-okko-team-work-final/project-okko-final')
-
 from configs.config import settings
 from utils.utils import (
     save_pickle,

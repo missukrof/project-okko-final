@@ -29,9 +29,6 @@ from data_prep.feature_engineering_users import (
     generation_users_metadata
 )
 
-import sys
-sys.path.append('C:/Users/a.kuznetsova/Documents/Python Scripts/okko/project-okko-team-work-final/project-okko-final')
-
 from configs.config import settings
 from utils.utils import (
     copy_files_to_path

@@ -1,14 +1,18 @@
+import pandas as pd
+import numpy as np
 
 from models.lfm import LFMModel
 from models.ranker import Ranker
 
 from configs.config import settings
-
+from utils.utils import (
+    read_parquet
+)
 from data_prep.prepare_ranker_data import (
     get_user_features,
     get_items_features,
     prepare_ranker_input
-    )
+)
 
 import logging
 
@@ -21,10 +25,10 @@ def get_recommendations(user_id: int, top_k: int = 20):
     lfm_model = LFMModel()
     ranker = Ranker()
 
-    logging.info('getting 1st level candidates')
+    logging.info('Getting 1st level candidates...')
     candidates = lfm_model.infer(user_id = user_id, top_k = top_k)
 
-    logging.info('getting features...')
+    logging.info('Getting features...')
     user_features = get_user_features(user_id, user_cols=settings.PREPROCESSED_FEATURES.USER_METADATA)
     item_features = get_items_features(item_ids = list(candidates.keys()), item_cols = settings.PREPROCESSED_FEATURES.MOVIES_METADATA)
 
@@ -35,9 +39,33 @@ def get_recommendations(user_id: int, top_k: int = 20):
         ranker_features_order=ranker.ranker.feature_names_
         )
     preds = ranker.infer(ranker_input = ranker_input)
-    output = dict(zip(candidates.keys(), preds))
 
-    return output
+    item_features = read_parquet(
+        file_folder=settings.DATA_FOLDERS.PREPROCESSED_DATA_FOLDER, 
+        file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE
+        )[[settings.MOVIES_FEATURES.MOVIE_IDS, "title"]]
+    
+    # output = dict(zip(candidates.keys(), preds))
+    output = pd.DataFrame({settings.MOVIES_FEATURES.MOVIE_IDS: candidates.keys(), 'cbm_preds': preds})
+    output = output.merge(item_features, on=[settings.MOVIES_FEATURES.MOVIE_IDS], how="left")
+    output = output.sort_values(by=["cbm_preds"], ascending=[False])
+    output["temp"] = output.shape[0] * [1]
+    output['cbm_rank'] = output.groupby("temp").cumcount() + 1
+    output.drop(["temp"], axis=1, inplace=True)
 
-if __name__ == '__main__':
-    print(get_recommendations(973171))
+    cols = output.columns.tolist()
+    cols = [cols[ind] for ind in [0, 2, 1, 3]]
+    output = output[cols]
+
+    return output.reset_index(drop=True)
+
+# if __name__ == '__main__':
+
+#     users_data = read_parquet(
+#         file_folder=settings.DATA_FOLDERS.PREPROCESSED_DATA_FOLDER, 
+#         file_name=settings.DATA_FILES_G.USERS_METADATA_FILE
+#         )
+    
+#     random_user_id = np.random.choice(users_data[settings.USERS_FEATURES.USER_IDS].unique(), 1)[0]
+#     print(random_user_id)
+#     print(get_recommendations(random_user_id))

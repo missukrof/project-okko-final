@@ -20,5 +20,5 @@ RANDOM_STATE = 42
 
 [RANKER_PREPROCESS_FEATURES]
 TARGET = "target"
-DROP_FEATURES = [ "movie_name", "datetime", "watched_pct", "watched_pct_cumsum", "watch_duration_minutes", "watch_duration_minutes_cumsum", "year_cat",]
-CATEGORICAL_COLS = [ "main_actor", "main_director", "main_country", "main_genre", "fav_actors", "fav_director", "fav_genres", "fav_country", ]
+DROP_FEATURES = [ "year", "month", "day", "movie_name", "datetime", "watched_pct", "watched_pct_cumsum", "watch_duration_minutes", "watch_duration_minutes_cumsum", "year_cat_release_world",]
+CATEGORICAL_COLS = [ "main_actors", "main_director", "main_country", "main_genres", "fav_actors", "fav_director", "fav_genres", "fav_country", ]

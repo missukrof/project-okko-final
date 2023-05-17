@@ -12,7 +12,7 @@ from configs.config import settings
 class Ranker:
     def __init__(self, is_infer=True):
         if is_infer:
-            logging.info("loading ranker model")
+            logging.info("Loading ranker model...")
             self.ranker = cb.CatBoostClassifier().load_model(
                 fname=settings.CBM_TRAIN_PARAMS.MODEL_PATH
             )
@@ -37,14 +37,16 @@ class Ranker:
         if X_test is None and y_test is None:
             all_y = y_train
         else:
-            all_y = pd.concat([y_train, y_test], ignore_index=True)[settings.RANKER_PREPROCESS_FEATURES.TARGET]
+            all_y = pd.concat([y_train, y_test], ignore_index=True)
         
         classes = np.unique(all_y)
         class_weights = dict(zip(classes, list(
-            class_weight.compute_class_weight(class_weight='balanced', classes=classes,y=all_y)
+            class_weight.compute_class_weight(class_weight='balanced', classes=classes, y=all_y)
             )))
+        logging.info(f"Class weights: {class_weights}")
 
-        logging.info(f"init ranker model")
+
+        logging.info(f"Init ranker model...")
         cbm_classifier = cb.CatBoostClassifier(
             loss_function=settings.CBM_TRAIN_PARAMS.LOSS_FUNCTION,
             class_weights=class_weights,
@@ -55,15 +57,16 @@ class Ranker:
             verbose=settings.CBM_TRAIN_PARAMS.VERBOSE,
             early_stopping_rounds=settings.CBM_TRAIN_PARAMS.EARLY_STOPPING_ROUNDS,
             cat_features=settings.RANKER_PREPROCESS_FEATURES.CATEGORICAL_COLS,
+            allow_writing_files=False
         )
 
-        logging.info("started fitting the model and choosing features")
+        logging.info("Started fitting the model and choosing features...")
         summary = cbm_classifier.select_features(
             X_train, y_train,
             eval_set=(X_test, y_test),
             features_for_select=list(range(X_train.shape[1])),
             num_features_to_select=25,
-            steps=2,
+            steps=1,
             algorithm=cb.EFeaturesSelectionAlgorithm.RecursiveByShapValues,
             shap_calc_type=cb.EShapCalcType.Regular,
             train_final_model=True,
@@ -82,7 +85,7 @@ class Ranker:
         :candidates: dict with ranks {"item_id": 1, ...}
         """
 
-        logging.info("making predictions...")
+        logging.info("Making predictions...")
         preds = self.ranker.predict_proba(ranker_input)[:, 1]
 
         return preds

@@ -5,18 +5,18 @@ LEARNING_RATE = 0.03
 LOSS = "warp"
 MAX_SAMPLED = 5
 RANDOM_STATE = 42
-MODEL_PATH = "artefacts/lfm_model.dill"
-MAPPER_PATH = "artefacts/lfm_mapper.dill"
+MODEL_PATH = "artefacts/model/lfm_model.dill"
+MAPPER_PATH = "artefacts/model/lfm_mapper.dill"
 
 [LFM_PREDS_PARAMS]
 TOP_K = 30
 
 [CBM_TRAIN_PARAMS]
 LOSS_FUNCTION = 'Logloss'
-ITERATIONS = 5000
+ITERATIONS = 500
 LEARNING_RATE = 0.1
 DEPTH = 10
 RANDOM_STATE = 1234
 VERBOSE = '@bool True'
 EARLY_STOPPING_ROUNDS = 100
-MODEL_PATH = "artefacts/catboost_clf.cbm"
+MODEL_PATH = "artefacts/model/catboost_clf.cbm"

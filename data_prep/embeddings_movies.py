@@ -9,9 +9,6 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 
 from typing import List
 
-import sys
-sys.path.append('C:/Users/a.kuznetsova/Documents/Python Scripts/okko/project-okko-team-work-final/project-okko-final')
-
 from configs.config import settings
 from utils.utils import (
     read_parquet_from_local_path,

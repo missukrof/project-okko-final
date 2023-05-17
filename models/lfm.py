@@ -13,7 +13,7 @@ from utils.utils import load_model, save_model
 class LFMModel:
     def __init__(self, is_infer=True):
         if is_infer:
-            logging.info("loading candidates model")
+            logging.info("Loading candidates model...")
             self.lfm_model = load_model(settings.LFM_TRAIN_PARAMS.MODEL_PATH)
             self.mapper = load_model(settings.LFM_TRAIN_PARAMS.MAPPER_PATH).mapping()
 
