@@ -3,6 +3,8 @@ import ast
 import pandas as pd
 from typing import Dict, List
 
+import logging
+
 from configs.config import settings
 from utils.utils import (
     save_pickle,
@@ -19,6 +21,8 @@ from fire import Fire
 
 
 def first_data_copy() -> None:
+
+    logging.info("Copying initial data...")
     for file in settings.DATA_FILES_P.values():
         copy_files_to_path(
             src_file_folder=settings.DATA_FOLDERS.INITIAL_DATA_FOLDER,
@@ -28,7 +32,8 @@ def first_data_copy() -> None:
 
 
 def generate_datetime_feature() -> None:
-    
+
+    logging.info("Generating datetime feature...")
     interactions, _, _ = create_dataframes()
     
     date_columns = ['year', 'month', 'day']
@@ -55,6 +60,7 @@ def generate_datetime_feature() -> None:
 
 def fill_unknown_movie_ids() -> None:
     
+    logging.info("Filling unknown movie IDs...")
     _, movies_metadata, interactions_merged = create_dataframes()
     interactions_merged_all_nans = interactions_merged[interactions_merged[interactions_merged.columns[7:]].isna().all(axis=1)]
     missing_ids_list = interactions_merged_all_nans[settings.MOVIES_FEATURES.MOVIE_IDS].unique()
@@ -90,7 +96,8 @@ def fill_unknown_movie_ids() -> None:
     
 
 def fill_series_duration_nans() -> None:
-    
+
+    logging.info("Filling series duration missing values...")
     _, movies_metadata, _ = create_dataframes()
 
     total_series_time = movies_metadata[movies_metadata['entity_type'] == 'Серия']\
@@ -116,6 +123,7 @@ def fill_series_duration_nans() -> None:
 
 def generalization_of_entity_types() -> None:
     
+    logging.info("Generalization of entity types...")
     _, movies_metadata, interactions_merged = create_dataframes()
 
     for ind, row in interactions_merged[interactions_merged['entity_type'].isin(['Серия', 'Сезон'])].iterrows():
@@ -146,6 +154,7 @@ def convert_to_list_type(
     columns: List[str] = settings.MOVIES_FEATURES.LIST_MOVIE_FEATURES
     ) -> None:
 
+    logging.info("Converting list features to list type...")
     movies_metadata = read_parquet_from_local_path(
         file_folder=settings.DATA_FOLDERS.ARTEFACTS_DATA_FOLDER, 
         file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE

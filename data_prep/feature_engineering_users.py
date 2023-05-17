@@ -1,5 +1,6 @@
 import pandas as pd
 
+import logging
 from configs.config import settings
 from utils.utils import (
     create_dataframes,
@@ -10,6 +11,8 @@ from fire import Fire
 
 
 def generate_fav_user_person(df, user_col, feature_col):
+
+    logging.info("Cenerating users favourite persons from movie cast...")
     count = df.copy()
     count[feature_col] = count[feature_col]\
         .fillna({i: ['Unknown'] for i in count.index})
@@ -27,6 +30,8 @@ def generate_fav_user_person(df, user_col, feature_col):
 
 
 def generate_fav_user_feature(df, user_col, feature_col):
+
+    logging.info("Cenerating users favourite features from movie...")
     temp_df = df.copy()
     temp_df[feature_col] = temp_df[feature_col]\
         .fillna({i: ['Unknown'] for i in temp_df.index})
@@ -47,6 +52,7 @@ def generate_fav_user_feature(df, user_col, feature_col):
 
 def generate_users_kids(df, user_col, feature_col):
 
+    logging.info("Cenerating users kids flag...")
     user_watched_sum = df[[user_col, 'watch_duration_minutes']]\
         .groupby([user_col])\
             .agg('sum')\
@@ -75,6 +81,7 @@ def generate_users_kids(df, user_col, feature_col):
 
 def generation_users_metadata():
 
+    logging.info("Cenerating users metadata set...")
     interactions, _, interactions_merged = create_dataframes()
 
     users_metadata = pd.DataFrame({

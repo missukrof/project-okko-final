@@ -9,7 +9,8 @@ from configs.config import settings
 from utils.utils import (
     generate_lightfm_recs_mapper,
     load_model,
-    read_parquet
+    read_parquet,
+    load_model_from_zip
 )
 
 
@@ -140,6 +141,8 @@ def prepare_data_for_train() -> Tuple[pd.DataFrame]:
         paths_config: dict, wher key is path name and value is the path to data
     """
     # load model artefacts
+    load_model_from_zip(path_zip=settings.LFM_TRAIN_PARAMS.MODEL_PATH_ZIP)
+    load_model_from_zip(path_zip=settings.LFM_TRAIN_PARAMS.MAPPER_PATH_ZIP)
     model = load_model(settings.LFM_TRAIN_PARAMS.MODEL_PATH)
     dataset = load_model(settings.LFM_TRAIN_PARAMS.MAPPER_PATH)
 

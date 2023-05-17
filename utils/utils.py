@@ -1,4 +1,5 @@
 import os
+from zipfile import ZipFile, ZIP_DEFLATED
 import shutil
 import dill
 import pickle
@@ -6,8 +7,7 @@ import toml
 import numpy as np
 import pandas as pd
 
-import sys
-sys.path.append('C:/Users/a.kuznetsova/Documents/Python Scripts/okko/project-okko-team-work-final/project-okko-final')
+import logging
 
 from configs.config import settings
 
@@ -35,9 +35,9 @@ def read_parquet_from_local_path(file_folder, file_name):
     """
     parent_directory = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
     data = read_parquet(file_folder=file_folder, file_name=file_name)
-    toml_file_name = "features_1.toml"
+    toml_file_name = "features.toml"
 
-    with open(f"{parent_directory}\configs\{toml_file_name}", "r") as toml_file:
+    with open(f"{parent_directory}/configs/{toml_file_name}", "r") as toml_file:
         features = toml.load(toml_file)
     
     if file_name.split(".")[0].upper() == 'USERS_METADATA':
@@ -49,7 +49,7 @@ def read_parquet_from_local_path(file_folder, file_name):
         except KeyError:
             features['INITIAL_FEATURES'][f'{file_name.split(".")[0]}'.upper()] = data.columns.to_list()
 
-    with open(f"{parent_directory}\configs\{toml_file_name}", "w") as toml_file:
+    with open(f"{parent_directory}/configs/{toml_file_name}", "w") as toml_file:
         toml.dump(features, toml_file)
 
     return data
@@ -122,7 +122,19 @@ def save_model(model: object, path: str):
 def load_model(path: str):
     with open(path, "rb") as obj_file:
         obj = dill.load(obj_file)
+    os.remove(path)
     return obj
+
+
+def add_model_to_zip(path_model: str, path_zip: str):
+    with ZipFile(path_zip, "w", ZIP_DEFLATED) as obj_zip:
+        obj_zip.write(path_model)
+    os.remove(path_model)
+
+
+def load_model_from_zip(path_zip: str):
+    with ZipFile(path_zip, "r") as obj_zip:
+        obj_zip.extractall()
 
 
 def save_pickle(data: object, path: str):

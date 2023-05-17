@@ -4,6 +4,7 @@ import pandas as pd
 from typing import List
 from transliterate import translit
 
+import logging
 from configs.config import settings
 from utils.utils import (
     create_dataframes,
@@ -17,7 +18,8 @@ from fire import Fire
 def convert_to_datetime_type(
         feature_cols: List[str] = ['release_world']
         ) -> None:
-    
+
+    logging.info("Converting movies metadata columns to datetime type...")
     movies_metadata = read_parquet_from_local_path(
         file_folder=settings.DATA_FOLDERS.ARTEFACTS_DATA_FOLDER, 
         file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE
@@ -38,6 +40,7 @@ def generate_dummy_cols(
         list_cols: List[str] = ['genres', 'country']
         ) -> None:
 
+    logging.info("Cenerating movies dummy cols...")
     movies_metadata = read_parquet_from_local_path(
         file_folder=settings.DATA_FOLDERS.ARTEFACTS_DATA_FOLDER, 
         file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE
@@ -79,6 +82,7 @@ def generate_main_features(
         feature_cols: List[str] = ['actors', 'director', 'genres', 'country']
         ) -> None:
 
+    logging.info("Cenerating main features from movies metadata...")
     movies_metadata = read_parquet_from_local_path(
         file_folder=settings.DATA_FOLDERS.ARTEFACTS_DATA_FOLDER, 
         file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE
@@ -100,6 +104,7 @@ def fill_nans_by_column(
         feature_cols: List[str] = ['actors', 'director', 'genres', 'country']
         ) -> None:
 
+    logging.info("Filling categorical missing values...")
     movies_metadata = read_parquet_from_local_path(
         file_folder=settings.DATA_FOLDERS.ARTEFACTS_DATA_FOLDER, 
         file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE
@@ -124,6 +129,7 @@ def generate_movie_popularity(
         grouby_cols: List[str] = ['movie_id', 'genres', 'country']
         ) -> None:
 
+    logging.info("Cenerating movie popularity...")
     interactions, movies_metadata, interactions_merged = create_dataframes()
 
     for column in grouby_cols:
@@ -170,6 +176,7 @@ def generate_year_features(
         datetime_cols: List[str] = ['release_world']
         ) -> None:
 
+    logging.info("Cenerating movie categorical year features...")
     movies_metadata = read_parquet_from_local_path(
         file_folder=settings.DATA_FOLDERS.ARTEFACTS_DATA_FOLDER, 
         file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE
@@ -198,6 +205,7 @@ def generate_watch_duration_minutes_mean(
         feature_cols: List[str] = ['movie_id']
         ) -> None:
 
+    logging.info("Cenerating mean watch duration minutes by movie...")
     _, movies_metadata, interactions_merged = create_dataframes()
 
     for column in feature_cols:

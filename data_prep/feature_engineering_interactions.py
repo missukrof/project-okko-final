@@ -1,5 +1,6 @@
 import pandas as pd
 
+import logging
 from configs.config import settings
 from utils.utils import (
     create_dataframes,
@@ -10,6 +11,8 @@ from fire import Fire
 
 
 def generate_watch_features():
+
+    logging.info("Cenerating interactions watching features...")
     interactions, _, interactions_merged = create_dataframes()
 
     interactions_merged['watched_pct'] = (interactions_merged['watch_duration_minutes'] / interactions_merged['duration']) * 100

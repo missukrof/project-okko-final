@@ -7,6 +7,8 @@ MAX_SAMPLED = 5
 RANDOM_STATE = 42
 MODEL_PATH = "artefacts/model/lfm_model.dill"
 MAPPER_PATH = "artefacts/model/lfm_mapper.dill"
+MODEL_PATH_ZIP = "artefacts/model/lfm_model.zip"
+MAPPER_PATH_ZIP = "artefacts/model/lfm_mapper.zip"
 
 [LFM_PREDS_PARAMS]
 TOP_K = 30
@@ -20,3 +22,4 @@ RANDOM_STATE = 1234
 VERBOSE = '@bool True'
 EARLY_STOPPING_ROUNDS = 100
 MODEL_PATH = "artefacts/model/catboost_clf.cbm"
+MODEL_PATH_ZIP = "artefacts/model/catboost_clf.zip"

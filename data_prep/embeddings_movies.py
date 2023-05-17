@@ -2,13 +2,17 @@ import numpy as np
 import pandas as pd
 
 import re
+import nltk
 from pymystem3 import Mystem
 from string import punctuation
 from nltk.corpus import stopwords
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 
+nltk.download('stopwords')
+
 from typing import List
 
+import logging
 from configs.config import settings
 from utils.utils import (
     read_parquet_from_local_path,
@@ -89,6 +93,7 @@ def train_embeddings(tags_doc: np.array,
 
 
 def generate_embeddings(df, id_col, title_col, merge_cols: List[str], list_cols: List[str] = None, name_cols: List[str] = None):
+
     sample = df.copy()
     sample = sample.fillna(' ')
 
@@ -133,7 +138,8 @@ def add_embeddings_to_dataframe():
         file_folder=settings.DATA_FOLDERS.ARTEFACTS_DATA_FOLDER, 
         file_name=settings.DATA_FILES_P.MOVIES_METADATA_FILE
         )
-
+    
+    logging.info("Cenerating movies metadata embeddings...")
     movies_metadata['movie_meta_emb'] = generate_embeddings(
         df=movies_metadata,
         id_col=settings.MOVIES_FEATURES.MOVIE_IDS,
@@ -142,6 +148,7 @@ def add_embeddings_to_dataframe():
         list_cols=['genres', 'country']
         )
 
+    logging.info("Cenerating movies cast embeddings...")
     movies_metadata['movie_cast_emb'] = generate_embeddings(
         df=movies_metadata,
         id_col=settings.MOVIES_FEATURES.MOVIE_IDS,

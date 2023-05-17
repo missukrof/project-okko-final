@@ -6,6 +6,7 @@ from selenium.webdriver.support import ui
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
+import logging
 from configs.config import settings
 from utils.utils import (
     save_pickle,
@@ -14,6 +15,7 @@ from utils.utils import (
 
 def find_missing_titles(missing_ids_list):
     
+    logging.info("Starting parsing website to find missing movie IDs...")
     parent_directory = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 
     if len(os.listdir(f"{parent_directory}{settings.NAN_MAPPING_PATH.FOLDER}")) > 0:

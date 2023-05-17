@@ -1,3 +1,4 @@
+import os
 import logging
 from typing import Dict, List
 
@@ -7,15 +8,20 @@ import numpy as np
 import pandas as pd
 
 from configs.config import settings
-
+from utils.utils import (
+    add_model_to_zip, 
+    load_model_from_zip
+)
 
 class Ranker:
     def __init__(self, is_infer=True):
         if is_infer:
             logging.info("Loading ranker model...")
+            load_model_from_zip(path_zip=settings.CBM_TRAIN_PARAMS.MODEL_PATH_ZIP)
             self.ranker = cb.CatBoostClassifier().load_model(
                 fname=settings.CBM_TRAIN_PARAMS.MODEL_PATH
             )
+            os.remove(settings.CBM_TRAIN_PARAMS.MODEL_PATH)
         else:
             pass
 
@@ -77,6 +83,8 @@ class Ranker:
         print(f"Selected features: {summary.get('selected_features_names')}")
 
         cbm_classifier.save_model(settings.CBM_TRAIN_PARAMS.MODEL_PATH)
+        add_model_to_zip(path_model=settings.CBM_TRAIN_PARAMS.MODEL_PATH,
+                         path_zip=settings.CBM_TRAIN_PARAMS.MODEL_PATH_ZIP)
 
     def infer(self, ranker_input: List) -> Dict[str, int]:
         """

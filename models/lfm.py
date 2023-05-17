@@ -7,14 +7,24 @@ from lightfm import LightFM
 from lightfm.data import Dataset
 
 from configs.config import settings
-from utils.utils import load_model, save_model
+from utils.utils import (
+    load_model, 
+    save_model,
+    add_model_to_zip,
+    load_model_from_zip
+)
 
 
 class LFMModel:
     def __init__(self, is_infer=True):
         if is_infer:
+
             logging.info("Loading candidates model...")
+            
+            load_model_from_zip(path_zip=settings.LFM_TRAIN_PARAMS.MODEL_PATH_ZIP)
             self.lfm_model = load_model(settings.LFM_TRAIN_PARAMS.MODEL_PATH)
+
+            load_model_from_zip(path_zip=settings.LFM_TRAIN_PARAMS.MAPPER_PATH_ZIP)
             self.mapper = load_model(settings.LFM_TRAIN_PARAMS.MAPPER_PATH).mapping()
 
         else:
@@ -46,6 +56,8 @@ class LFMModel:
 
         # save mappers
         save_model(dataset, settings.LFM_TRAIN_PARAMS.MAPPER_PATH)
+        add_model_to_zip(path_model=settings.LFM_TRAIN_PARAMS.MAPPER_PATH,
+                         path_zip=settings.LFM_TRAIN_PARAMS.MAPPER_PATH_ZIP)
 
         # init model
         epochs = settings.LFM_TRAIN_PARAMS.EPOCHS
@@ -64,7 +76,9 @@ class LFMModel:
 
         # save model
         save_model(lfm_model, settings.LFM_TRAIN_PARAMS.MODEL_PATH)
-
+        add_model_to_zip(path_model=settings.LFM_TRAIN_PARAMS.MODEL_PATH,
+                         path_zip=settings.LFM_TRAIN_PARAMS.MODEL_PATH_ZIP)
+        
     def infer(self, user_id: int, top_k: int = 20) -> Dict[str, int]:
         """
         method to make recommendations for a single user id
