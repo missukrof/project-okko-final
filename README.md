@@ -47,7 +47,7 @@ both files should be in <i>.parquet</i> format.
 - <a href="https://github.com/missukrof/project-okko-final/blob/main/train.py" target="_blank">train.py</a> - use to train both models
 - <a href="https://github.com/missukrof/project-okko-final/blob/main/inference.py" target="_blank">inference.py</a> - use to get recommendations from two-stage model for a particular user.
 ## Output
-table with movies list for specific user and calculated score and rank for each movie.
+Table with movies list for specific user and calculated score and rank for each movie.
 ## How to run
 Step 1: "poetry export -f requirements.txt --output requirements.txt" - copy required poetry settings 
 
