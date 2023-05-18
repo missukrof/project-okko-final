@@ -57,4 +57,4 @@ App is running in localhost.
 
 Open browser, paste the URL using the following template into the address bar: `http://127.0.0.1:5000/index?id={PLACE USER ID HERE}`. Refresh page.
 ## Example app output
-![app](https://github.com/missukrof/project-okko-final/assets/109980006/9b09aa84-be13-4403-881e-246728c3cc59)
+![app_modified](https://github.com/missukrof/project-okko-final/assets/109980006/2f63923b-9fb8-42c8-bf71-f4bf01a1961b)
