@@ -114,6 +114,54 @@ def generate_lightfm_recs_mapper(
     return _recs_mapper
 
 
+def compute_metrics(df_true: pd.DataFrame, 
+                    df_pred: pd.DataFrame, 
+                    K: int, 
+                    rank_col: str = 'rank') -> pd.DataFrame:
+
+    result = pd.DataFrame(columns=['Metric', 'Value'])
+
+    test_recs = df_true.set_index([settings.USERS_FEATURES.USER_IDS, settings.MOVIES_FEATURES.MOVIE_IDS])\
+        .join(df_pred.set_index([settings.USERS_FEATURES.USER_IDS, settings.MOVIES_FEATURES.MOVIE_IDS]))
+    test_recs = test_recs.sort_values(by=[settings.USERS_FEATURES.USER_IDS, rank_col])
+
+    test_recs['users_item_count'] = test_recs.groupby(level=settings.USERS_FEATURES.USER_IDS)[rank_col].transform(np.size)
+    test_recs['reciprocal_rank'] = (1 / test_recs[rank_col]).fillna(0)
+    test_recs['cumulative_rank'] = test_recs.groupby(level=settings.USERS_FEATURES.USER_IDS).cumcount() + 1
+    test_recs['cumulative_rank'] = test_recs['cumulative_rank'] / test_recs[rank_col]
+    
+    users_count = test_recs.index.get_level_values(settings.USERS_FEATURES.USER_IDS).nunique()
+
+    # for k in range(1, K + 1):
+    #     hit_k = f'hit@{k}'
+    #     test_recs[hit_k] = test_recs[rank_col] <= k
+    #     result.loc[len(result.index)] = [f'Precision@{k}', (test_recs[hit_k] / k).sum() / users_count]
+
+    hit_k = f'hit@{K}'
+    test_recs[hit_k] = test_recs[rank_col] <= K
+    result.loc[len(result.index)] = [f'Precision@{K}', (test_recs[hit_k] / K).sum() / users_count]
+
+    result.loc[len(result.index)] = [f'MAP@{K}', (test_recs['cumulative_rank'] / test_recs['users_item_count']).sum() / users_count]
+    result.loc[len(result.index)] = [f'MRR', test_recs.groupby(level=settings.USERS_FEATURES.USER_IDS)['reciprocal_rank'].max().mean()]
+
+    ideal_dcg = df_true.groupby(settings.USERS_FEATURES.USER_IDS)\
+        .apply(lambda x: np.sum(1 / np.log2(np.arange(2, len(x) + 2))))
+    ideal_dcg = ideal_dcg.sum()
+    
+    predicted_dcg = test_recs.reset_index().groupby(settings.USERS_FEATURES.USER_IDS)\
+        .apply(lambda x: np.sum(x[rank_col].head(K).apply(lambda r: 1 / np.log2(r + 2))))
+    predicted_dcg = predicted_dcg.sum()
+    
+    if ideal_dcg == 0:
+        ndcg = 0
+    else:
+        ndcg = predicted_dcg / ideal_dcg
+    
+    result.loc[len(result.index)] = [f'NDCG@{K}', ndcg]
+
+    return result
+
+
 def save_model(model: object, path: str):
     with open(f"{path}", "wb") as obj_path:
         dill.dump(model, obj_path)
