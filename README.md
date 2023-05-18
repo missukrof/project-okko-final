@@ -46,10 +46,14 @@ Table with movies list for specific user and calculated score and rank for each 
 ## How to run
 <b>Step 1.</b>
 - run `start.sh`
+
 OR
+
 - run `docker-compose up -d --build`
 App is running in localhost.
+
 <b>Step 2.</b>
+
 Open browser, paste the URL using the following template into the address bar: `http://127.0.0.1:5000/index?id={PLACE USER ID HERE}`. Refresh page.
 ## Example app output
 ![app](https://github.com/missukrof/project-okko-final/assets/109980006/9b09aa84-be13-4403-881e-246728c3cc59)
