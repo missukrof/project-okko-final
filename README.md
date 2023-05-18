@@ -49,7 +49,8 @@ both files should be in <i>.parquet</i> format.
 ## Output
 table with movies list for specific user and calculated score and rank for each movie.
 ## How to run
-Step 1: "poetry export -f requirements.txt --output requirements.txt" - copy required poetry settings
+Step 1: "poetry export -f requirements.txt --output requirements.txt" - copy required poetry settings 
+
 Step 2:  
 - if mac: run "start.sh" 
 - if windows: "docker-compose up -d --build" 
