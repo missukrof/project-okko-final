@@ -50,6 +50,7 @@ Table with movies list for specific user and calculated score and rank for each 
 OR
 
 - run `docker-compose up -d --build`
+
 App is running in localhost.
 
 <b>Step 2.</b>
